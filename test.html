@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Guess The Singer: Test your music knowledge!">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guess The Singer with Firebase</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    input, button {
+      font-size: 1.2rem;
+      padding: 10px;
+      margin: 5px;
+    }
+    #result {
+      font-size: 1.4rem;
+      margin-top: 20px;
+    }
+    /* Stats Popup styles */
+    #stats-popup {
+      display: none; 
+      position: fixed; 
+      top: 0; left: 0; 
+      width: 100%; height: 100%; 
+      background: rgba(0,0,0,0.8); 
+      justify-content: center; 
+      align-items: center; 
+      z-index: 3000;
+    }
+    #stats-popup .popup-content {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+    }
+    #stats-popup button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    /* Bar chart styles */
+    .stats-chart {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .stats-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+    .stats-label {
+      width: 100px;
+      text-align: right;
+      font-weight: bold;
+    }
+    .stats-bar-container {
+      flex: 1;
+      background: #ddd;
+      height: 25px;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .stats-bar {
+      background: #3CB371; /* primary green (or choose your color) */
+      height: 100%;
+      width: 0;
+      border-radius: 5px;
+      transition: width 1s ease;
+    }
+  </style>
+</head>
+<body>
+  <h1>Guess The Singer</h1>
+  <input type="text" id="guess-input" placeholder="Enter singer's name">
+  <button id="submit-button">Submit Guess</button>
+  <p id="result"></p>
+  <p>Total Guesses: <span id="guess-count">0</span></p>
+
+  <!-- Stats Popup -->
+  <div id="stats-popup">
+    <div class="popup-content" id="stats-popup-content">
+      <!-- Stats summary and chart will be injected here -->
+    </div>
+  </div>
+
+  <!-- Use type="module" to enable ES module syntax -->
+  <script type="module">
+    // Import Firebase modules for App, Database, and Auth.
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getDatabase, ref, push, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+
+    // Firebase configuration – replace with your actual settings.
+    const firebaseConfig = {
+        apiKey: "AIzaSyD36qSJ8YAPc3A4FL9jlBGlpiWwj530SPQ",
+  authDomain: "guessthesinger10.firebaseapp.com",
+  databaseURL: "https://guessthesinger10-default-rtdb.firebaseio.com",
+  projectId: "guessthesinger10",
+  storageBucket: "guessthesinger10.firebasestorage.app",
+  messagingSenderId: "97201023235",
+  appId: "1:97201023235:web:ab111d9acb43ef7d4be136",
+  measurementId: "G-3R005HTKEW"
+    };
+
+    // Initialize Firebase App, Database, and Auth.
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const auth = getAuth(app);
+
+    // Create a database reference to "gameResults".
+    const resultsRef = ref(database, "gameResults");
+
+    // Function to record the game result. This version will only record if the user is logged in.
+    function recordGameResult(questionsUsed) {
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        console.error("No user is currently logged in.");
+        return;
+      }
+      const resultData = {
+        userId: currentUser.uid,
+        questionsUsed: questionsUsed,
+        timestamp: new Date().toISOString()
+      };
+
+      push(resultsRef, resultData)
+        .then(() => {
+          console.log("Game result recorded:", resultData);
+        })
+        .catch((err) => {
+          console.error("Failed to record game result:", err);
+        });
+    }
+
+    // Function to fetch and display user stats in a popup with an animated bar chart.
+    function showUserStatsPopup() {
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        console.error("No user is currently logged in. Cannot fetch stats.");
+        return;
+      }
+      const userId = currentUser.uid;
+      // Query the resultsRef for entries matching the current user's UID.
+      const userResultsQuery = query(resultsRef, orderByChild("userId"), equalTo(userId));
+      get(userResultsQuery)
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            const resultsData = snapshot.val();
+            let totalGames = 0;
+            // Create bins for the six categories.
+            const categories = {
+              "1-3": 0,
+              "4-6": 0,
+              "7-9": 0,
+              "10-12": 0,
+              "13-15": 0,
+              "fail": 0
+            };
+
+            // Loop over each game result.
+            for (let key in resultsData) {
+              totalGames++;
+              const qs = resultsData[key].questionsUsed;
+              if (qs >= 1 && qs <= 3) {
+                categories["1-3"]++;
+              } else if (qs >= 4 && qs <= 6) {
+                categories["4-6"]++;
+              } else if (qs >= 7 && qs <= 9) {
+                categories["7-9"]++;
+              } else if (qs >= 10 && qs <= 12) {
+                categories["10-12"]++;
+              } else if (qs >= 13 && qs <= 15) {
+                categories["13-15"]++;
+              } else {
+                categories["fail"]++;
+              }
+            }
+            
+            // Build the HTML for the stats chart.
+            let chartHtml = `<h2>Your Stats</h2>
+              <p>Total Games Played: ${totalGames}</p>
+              <div class="stats-chart">`;
+
+            // For each category, create a row with a label and an animated progress bar.
+            for (let cat in categories) {
+              // Here, we'll assume a maximum width of 300px for the bar.
+              // The bar's width will be proportional to the count. Adjust the multiplier as needed.
+              const count = categories[cat];
+              const barWidth = count * 20; // for example, each game = 20px width
+              chartHtml += `
+                <div class="stats-row">
+                  <div class="stats-label">${cat}</div>
+                  <div class="stats-bar-container">
+                    <div class="stats-bar" style="width: 0px;" data-target-width="${barWidth}px"></div>
+                  </div>
+                  <div>${count}</div>
+                </div>`;
+            }
+            chartHtml += `</div>
+              <button id="close-stats-popup">Close</button>`;
+
+            // Inject the chart into the popup.
+            const statsPopupContent = document.getElementById("stats-popup-content");
+            statsPopupContent.innerHTML = chartHtml;
+            const statsPopup = document.getElementById("stats-popup");
+            statsPopup.style.display = "flex";
+
+            // Animate the bars.
+            document.querySelectorAll(".stats-bar").forEach(bar => {
+              const targetWidth = bar.getAttribute("data-target-width");
+              // Use a timeout to allow the element to render at width 0 before animating.
+              setTimeout(() => {
+                bar.style.width = targetWidth;
+              }, 100);
+            });
+
+            document.getElementById("close-stats-popup").addEventListener("click", () => {
+              statsPopup.style.display = "none";
+            });
+          } else {
+            console.log("No game stats found for this user.");
+            alert("No game stats found. Play some games first!");
+          }
+        })
+        .catch((err) => {
+          console.error("Error fetching user stats: ", err);
+        });
+    }
+
+    // Game Logic
+    const correctAnswer = "childish gambino"; // correct answer (in lowercase)
+    let guessCount = 0;
+
+    const guessInput = document.getElementById("guess-input");
+    const submitButton = document.getElementById("submit-button");
+    const resultDisplay = document.getElementById("result");
+    const guessCountDisplay = document.getElementById("guess-count");
+
+    submitButton.addEventListener("click", function() {
+      const userGuess = guessInput.value.trim().toLowerCase();
+      guessCount++;
+      guessCountDisplay.textContent = guessCount;
+
+      if (userGuess === correctAnswer) {
+        resultDisplay.textContent = `Correct! You guessed it in ${guessCount} ${guessCount > 1 ? "guesses" : "guess"}.`;
+        // Record the result along with the logged-in user's UID.
+        recordGameResult(guessCount);
+        // Disable further input.
+        guessInput.disabled = true;
+        submitButton.disabled = true;
+        // Fetch and display user stats in a popup with animated bars.
+        showUserStatsPopup();
+      } else {
+        resultDisplay.textContent = "Wrong guess. Try again!";
+      }
+      guessInput.value = "";
+      guessInput.focus();
+    });
+  </script>
+</body>
+</html>
