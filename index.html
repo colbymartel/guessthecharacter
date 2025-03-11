@@ -1,155 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Guess the Character</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Using a mix of serif for headings and sans-serif for body text -->
-  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    /* Define custom color scheme using CSS variables */
-    :root {
-      --bg-color: #fef9ef;
-      --header-footer-bg: #f9f7f3;
-      --primary-text: #011627;
-      --secondary-text: #3d5a80;
-      --accent: #d7263d;
-      --btn-bg: #011627;
-      --btn-hover: #023e8a;
-      --border-color: #d1d1d1;
-    }
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T42NG5C994"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-    /* CSS Reset */
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  gtag('config', 'G-T42NG5C994');
+</script>
+    <meta charset="UTF-8">
+    <meta name="description" content="Guess The Singer: Test your music knowledge with daily challenges, and share your results! Can you guess today's mystery singer?">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess The Singer</title>
+    <link rel="icon" href="/favicongg.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-    body {
-      font-family: 'Roboto', sans-serif;
-      background: var(--bg-color);
-      color: var(--primary-text);
-      line-height: 1.6;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    header {
-      background: var(--header-footer-bg);
-      border-bottom: 1px solid var(--border-color);
-      padding: 1rem 2rem;
-      text-align: center;
-    }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: var(--bg-color);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
-    header h1 {
-      font-family: 'Merriweather', serif;
-      font-size: 2.5rem;
-      letter-spacing: 1px;
-      margin-bottom: 0.5rem;
-      color: var(--primary-text);
-    }
+        /* Header */
+        .header {
+            background-color: #30b5bc;
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
 
-    header p {
-      font-size: 1rem;
-      color: var(--secondary-text);
-    }
+        /* Logo Styling */
+        .header .logo img {
+            width: 20%; /* Set a default width */
+            margin-bottom: 10px;
+            height: auto; /* Maintain aspect ratio */
+            display: block; /* Ensures proper centering */
+            margin: 0 auto; /* Centers horizontally */
+        }
 
-    main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-    }
+        /* Responsive Design for Smaller Screens */
+        @media (max-width: 768px) {
+            .header .logo img {
+                width: 60%; /* Reduce the size for smaller screens */
+            }
+        }
 
-    .game-container {
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      padding: 2rem;
-      width: 100%;
-      max-width: 600px;
-      text-align: center;
-      transition: transform 0.3s ease;
-    }
+        /* Main Section */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
 
-    .game-container:hover {
-      transform: translateY(-5px);
-    }
+        .main h2 {
+            font-size: 2.5rem; /* Increased from 2rem to 2.5rem (1.25x larger) */
+            margin-bottom: 10px;
+            color:  #30b5bc;
+        }
 
-    .game-container h2 {
-      font-family: 'Merriweather', serif;
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      color: var(--primary-text);
-    }
+        .main p {
+            font-size: 1.375rem; /* Increased from 1.1rem to ~1.375rem (1.25x larger) */
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #555;
+        }
 
-    .game-container p {
-      margin-bottom: 2rem;
-      color: var(--secondary-text);
-    }
+        /* Button Group for Login and Play Now */
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
 
-    .btn-play {
-      display: inline-block;
-      background: var(--btn-bg);
-      color: #fff;
-      padding: 0.75rem 1.5rem;
-      border-radius: 4px;
-      text-decoration: none;
-      font-size: 1rem;
-      font-weight: 500;
-      transition: background 0.3s ease;
-    }
+        .cta-button {
+            background-color:  #30b5bc;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.5rem; /* Increased from 1.2rem to 1.5rem */
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
 
-    .btn-play:hover {
-      background: var(--btn-hover);
-    }
+        .cta-button:hover {
+            background-color:  #208c92;
+            transform: scale(1.05);
+        }
 
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.875rem;
-      background: var(--header-footer-bg);
-      border-top: 1px solid var(--border-color);
-    }
+        /* Feature Section */
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            padding: 40px 20px;
+            background: white;
+        }
 
-    footer a {
-      color: var(--secondary-text);
-      text-decoration: none;
-      margin: 0 0.5rem;
-      transition: color 0.3s ease;
-    }
+        .feature-item {
+            max-width: 300px;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
 
-    footer a:hover {
-      color: var(--primary-text);
-    }
-  </style>
+        .feature-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-item h3 {
+            font-size: 1.5rem;
+            color:  #30b5bc;
+            margin-bottom: 10px;
+        }
+
+        .feature-item p {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        /* Footer */
+        .footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 6px; /* Add horizontal space between icons */
+            font-size: 1rem; /* Adjust size of icons */
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: #ff914d; /* Change color on hover */
+        }
+
+        .footer {
+            background-color:  #30b5bc; /* Matches the site's theme */
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 1rem;
+        }
+        .cta-button-grey:hover {
+            background-color: #bbb;
+            transform: scale(1.02);
+        }
+
+        .cta-button-grey {
+            background-color: #ccc;
+            color: #333;           
+            padding: 15px 30px;
+            font-size: 1.5rem; /* Increased from 1.2rem to 1.5rem */
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Guess the Character</h1>
-    <p>Created by Colby Martel</p>
-  </header>
-  
-  <main>
-    <div class="game-container">
-      <h2>Your Daily Challenge</h2>
-      <a href="/day1.html" class="btn-play">Play Now</a>
-      <a href="/calendar.html" class="btn-play">Past Puzzles</a>
-    </div>
-  </main>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <img src="images/characterlogo.png" alt="Guess the Singer Logo" loading="lazy">
+        </div>
+    </header>
+    
+    <!-- Main Section -->
+    <main class="main">
+        <h2>Your Daily Challenge</h2>
+        <p>Ask Questions, Guess the Character, and Share Your Results!</p>
+        <div class="button-group">
+            <button class="cta-button" onclick="window.location.href='../HISTORY/day1.html'">Play Now</button>
+            <button class="cta-button-grey" onclick="window.location.href='calendar.html'">Past Games</button>
+        </div>
+    </main>
 
-  <footer>
-    <p>&copy; 2025 GuessTheCharacter.com</p>
-    <nav>
-      <a href="/about">About</a>
-      <a href="/faq">FAQ</a>
-      <a href="/contact">Contact</a>
-    </nav>
-  </footer>
+    <!-- Footer -->
+    <footer class="footer">
+        &copy; 2025 Colby Martel | 
+        <a href="https://www.instagram.com/colbymartel19/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.youtube.com/ColbyMartel" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="https://www.tiktok.com/@ColbyMartel" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
+        <a href="https://discord.gg/AEH92GCs" target="_blank" title="Join Discord"><i class="fab fa-discord"></i></a>
+    </footer>
+    
 </body>
 </html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Guess the Character</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Using a mix of serif for headings and sans-serif for body text -->
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* Define custom color scheme using CSS variables */
+    :root {
+      --bg-color: #fef9ef;
+      --header-footer-bg: #f9f7f3;
+      --primary-text: #011627;
+      --secondary-text: #3d5a80;
+      --accent: #d7263d;
+      --btn-bg: #011627;
+      --btn-hover: #023e8a;
+      --border-color: #d1d1d1;
+    }
+
+    /* CSS Reset */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--bg-color);
+      color: var(--primary-text);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--header-footer-bg);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-family: 'Merriweather', serif;
+      font-size: 2.5rem;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+      color: var(--primary-text);
+    }
+
+    header p {
+      font-size: 1rem;
+      color: var(--secondary-text);
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .game-container {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .game-container:hover {
+      transform: translateY(-5px);
+    }
+
+    .game-container h2 {
+      font-family: 'Merriweather', serif;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--primary-text);
+    }
+
+    .game-container p {
+      margin-bottom: 2rem;
+      color: var(--secondary-text);
+    }
+
+    .btn-play {
+      display: inline-block;
+      background: var(--btn-bg);
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: background 0.3s ease;
+    }
+
+    .btn-play:hover {
+      background: var(--btn-hover);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.875rem;
+      background: var(--header-footer-bg);
+      border-top: 1px solid var(--border-color);
+    }
+
+    footer a {
+      color: var(--secondary-text);
+      text-decoration: none;
+      margin: 0 0.5rem;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: var(--primary-text);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Guess the Character</h1>
+    <p>Created by Colby Martel</p>
+  </header>
+  
+  <main>
+    <div class="game-container">
+      <h2>Your Daily Challenge</h2>
+      <a href="/day1.html" class="btn-play">Play Now</a>
+      <a href="/calendar.html" class="btn-play">Past Puzzles</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 GuessTheCharacter.com</p>
+    <nav>
+      <a href="/about">About</a>
+      <a href="/faq">FAQ</a>
+      <a href="/contact">Contact</a>
+    </nav>
+  </footer>
+</body>
+</html>
